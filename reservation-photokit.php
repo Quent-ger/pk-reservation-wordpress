@@ -21,6 +21,6 @@ if ( ! defined( 'PKRESERVATION_PLUGIN_DIR' ) ) {
 require_once PKRESERVATION_PLUGIN_DIR . 'includes/reservation-photokit-cpt.php';
 
 // Charge les meta boxes custom
-require_once PKRESERVATION_PLUGIN_DIR . 'includes/reservation-photokit-meta.php';
+require_once PKRESERVATION_PLUGIN_DIR . 'includes/meta/reservation-photokit-meta-status.php';
 
 ?>
