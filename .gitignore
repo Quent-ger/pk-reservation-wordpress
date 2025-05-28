@@ -1,0 +1,20 @@
+# Ignorer les fichiers temporaires de l'OS et de l'éditeur
+.DS_Store
+.vscode/
+*.sublime-project
+*.sublime-workspace
+.idea/
+npm-debug.log
+yarn-debug.log
+.env
+
+# Ignorer les dépendances si vous en avez (ex: composer, npm)
+/vendor/
+/node_modules/
+
+# Fichiers de log ou de cache du serveur local
+*.log
+*.sql
+
+# Fichier de build (si vous en générez un)
+/build/
