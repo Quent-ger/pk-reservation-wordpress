@@ -49,7 +49,7 @@ add_action( 'add_meta_boxes', 'pk_reservation_add_custom_boxes' ); // quand word
         <!--le HTML de la meta box -->
         <label for="pk_reservation_status_field">État de la réservation</label>
         <select name="pk_reservation_status_field" id="pk_reservation_status_field" class="postbox">
-            <option value="">Veuillez selectionner une option</option>
+            <option value="">Veuillez sélectionner une option</option>
             <option value="past" <?php selected( $current_status, 'past' ); ?> > Archivée </option>
             <option value="confirm" <?php selected( $current_status, 'confirm' ); ?> > Approuvée </option> <?php /* Utilisation de la fonction helper selected() de WP */ ?>
             <option value="pending" <?php selected( $current_status, 'pending' ); ?> > En attente </option>
@@ -78,14 +78,6 @@ add_action( 'add_meta_boxes', 'pk_reservation_add_custom_boxes' ); // quand word
     <?php
     }
     
-
-
-
-
-
-
-
-
 
     }
 
