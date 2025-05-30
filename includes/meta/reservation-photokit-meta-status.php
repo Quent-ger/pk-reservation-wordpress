@@ -50,30 +50,41 @@ add_action( 'add_meta_boxes', 'pk_reservation_add_custom_boxes' ); // quand word
         <label for="pk_reservation_status_field">État de la réservation</label>
         <select name="pk_reservation_status_field" id="pk_reservation_status_field" class="postbox">
             <option value="">Veuillez sélectionner une option</option>
-            <option value="past" <?php selected( $current_status, 'past' ); ?> > Archivée </option>
-            <option value="confirm" <?php selected( $current_status, 'confirm' ); ?> > Approuvée </option> <?php /* Utilisation de la fonction helper selected() de WP */ ?>
-            <option value="pending" <?php selected( $current_status, 'pending' ); ?> > En attente </option>
-            <option value="denied" <?php selected( $current_status, 'denied' ); ?> > Refusée </option>
+            <option value="confirm" <?php selected( $current_status, 'confirm' ); ?> > <span class="dashicons dashicons-yes"></span>  Approuvée </option> <?php /* Utilisation de la fonction helper selected() de WP */ ?>
+            <option value="pending" <?php selected( $current_status, 'pending' ); ?> > <span class="dashicons dashicons-clock"></span> En attente </option>
+            <option value="past" <?php selected( $current_status, 'past' ); ?> > <span class="dashicons dashicons-archive"></span>  Archivée </option>
+            <option value="denied" <?php selected( $current_status, 'denied' ); ?> > <span class="dashicons dashicons-no"></span>  Refusée </option>
         </select>
 
-    <?php
-    function pk_reservation_custom_box_reservation_begin_html($post)
-    {
-         wp_nonce_field( 'pk_reservation_save_reservation_begin_data', 'pk_reservation_begin_nonce' ); // nonce Wordpress pour assurer la sécurité (champ caché rempli par un hash autogénéré) -- assisté par IA
+    <?php function pk_reservation_custom_box_reservation_begin_html($post){
+
+    wp_nonce_field( 'pk_reservation_save_reservation_begin_data', 'pk_reservation_begin_nonce' ); // nonce Wordpress pour assurer la sécurité (champ caché rempli par un hash autogénéré) -- assisté par IA
+
+    // Obtenir la valeur de la date de début de réservation
+    $today_date = current_time("Y-m-d");
+    $current_begin_date = get_post_meta($post->ID, '_pk_reservation_begin_date', true);
     ?>
-         <!--le HTML de la meta box -->
+
+        <!--le HTML de la meta box -->
         <label for="pk_reservation_begin_field">Début de la réservation</label>
-        <input type="date" name="pk_reservation_begin_field" id="pk_reservation_begin_field" required>
+        <input type="date" name="pk_reservation_begin_field" id="pk_reservation_begin_field" min="<?php echo esc_attr($today_date); ?>" value="<?php echo esc_attr($current_begin_date); ?>" required>
 
     <?php
     }
 
     function pk_reservation_custom_box_reservation_end_html($post){
-           wp_nonce_field( 'pk_reservation_save_reservation_end_data', 'pk_reservation_end_nonce' ); // nonce Wordpress pour assurer la sécurité (champ caché rempli par un hash autogénéré) -- assisté par IA
+
+    wp_nonce_field( 'pk_reservation_save_reservation_end_data', 'pk_reservation_end_nonce' ); // nonce Wordpress pour assurer la sécurité (champ caché rempli par un hash autogénéré) -- assisté par IA
+    
+
+    // Obtenir la valeur de la date de fin de réservation
+    $today_date = current_time('Y-m-d');
+    $current_end_date = get_post_meta($post->ID, '_pk_reservation_end_date', true);    
     ?>
-         <!--le HTML de la meta box -->
+
+        <!--le HTML de la meta box -->
         <label for="pk_reservation_end_field">Fin de la réservation</label>
-        <input type="date" name="pk_reservation_end_field" id="pk_reservation_end_field" required>
+        <input type="date" name="pk_reservation_end_field" id="pk_reservation_end_field" min="<?php echo esc_attr($today_date); ?>"value="<?php echo esc_attr($current_end_date); ?>" required>
 
     <?php
     }
