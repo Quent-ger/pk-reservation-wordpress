@@ -19,15 +19,26 @@ function photokit_register_pkreservation_post_type() {  // préfixe photokit pou
         ),
 
         'menu_icon'     => 'dashicons-calendar-alt',  // icône dans le menu
-        'public' => true,
+        'public' => false, // il ne faut pas qu'on puisse accèder à une réservation en tappant son id dans l'url par ex.
         'menu_position' => 7, 
         'has_archive' => 'historique_des_reservations', //has_archive peut être de type 'string', c'est le slug qui comportera les archives de nos réservations
         'show_in_admin_bar'     => true, // est visible dans la barre d'admin
         'show_in_rest' => true,
         'supports' => array('title', 'author'),
+
+        'capabilities' => array( // définition des capabilités - nécessaires pour que le rôle pk_customer ne puisse pas modifier ou accèder aux posts des autres (confidentialité)
+        'edit_post'          => 'edit_pk_reservation',         // Peut éditer un post individuel
+        'read_post'          => 'read_pk_reservation',         // Peut lire un post individuel
+        'delete_post'        => 'delete_pk_reservation',       // Peut supprimer un post individuel
+        'edit_posts'         => 'edit_pk_reservations',        // Peut éditer plusieurs posts (vue liste)
+        'edit_others_posts'  => 'edit_others_pk_reservations', // Peut éditer les posts d'autres utilisateurs
+        'publish_posts'      => 'publish_pk_reservations',     // Peut publier/créer des posts
+        'read_private_posts' => 'read_private_pk_reservations',// Peut lire les posts privés
+        'create_posts'       => 'edit_pk_reservations',         // Souvent lié à 'edit_posts' pour la création
+        ),
+        'map_meta_cap' => true // fonction wordpress qui permet de traduire les rôles personnalisés et de les mettre en accord avec son moteur interne
     );
     register_post_type( 'pk_reservation', $args );
 }
 
 add_action( 'init', 'photokit_register_pkreservation_post_type' ); // Déclenche l'action d'enregistrement du CPT réservation au démarrage démarrage du coeur Wordpress (init)
-?>

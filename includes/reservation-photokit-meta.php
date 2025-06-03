@@ -51,7 +51,7 @@ add_action( 'add_meta_boxes', 'pk_reservation_add_custom_boxes' ); // quand word
     function pk_reservation_custom_box_status_html($post){  //code html pour la meta box Statut de réservation 
         $current_status = get_post_meta( $post->ID, '_pk_reservation_status', true ); //WP récupére le statut de réservation actuellement défini pour ce post - assisté par IA
 
-        if (empty( $current_status ) ) { // Si c'est un nouveau post (l'ID est 0) et que la variable current_status n'est pas définie, cette dernière prend pending/en attente par défaut -- assisté par IA
+        if ( empty( $current_status ) ) { // Si c'est un nouveau post (l'ID est 0) et que la variable current_status n'est pas définie, cette dernière prend pending/en attente par défaut -- assisté par IA
             $current_status = 'pending'; // Définit le statut de réservation par défaut comme "en attente"
         }
     ?>
@@ -176,5 +176,4 @@ add_action( 'save_post', 'pk_reservation_save_metaboxes_data' );
 // Indique à Wordpress d'effectuer l'action d'enregsitrement de status après chaque post réservation (reccomendation technique d'utiliser les deux)
 add_action( 'save_pkreservation', 'pk_reservation_save_metaboxes_data' );
 
-?>
 
