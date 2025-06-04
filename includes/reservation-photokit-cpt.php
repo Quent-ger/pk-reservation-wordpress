@@ -20,6 +20,7 @@ function photokit_register_pkreservation_post_type() {  // préfixe photokit pou
 
         'menu_icon'     => 'dashicons-calendar-alt',  // icône dans le menu
         'public' => false, // il ne faut pas qu'on puisse accèder à une réservation en tappant son id dans l'url par ex.
+        'show_ui' => true, // en revanche il n'est plus accessible dans le menu latéral par défaut si public est false -- très casse-tête 
         'menu_position' => 7, 
         'has_archive' => 'historique_des_reservations', //has_archive peut être de type 'string', c'est le slug qui comportera les archives de nos réservations
         'show_in_admin_bar'     => true, // est visible dans la barre d'admin
