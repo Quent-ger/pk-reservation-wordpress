@@ -47,6 +47,11 @@ require_once PKRESERVATION_PLUGIN_DIR . 'includes/reservation-photokit-reservati
 */
 
 // Hooks d'activation et désactivation
-register_activation_hook (__FILE__, 'photokit_add_custom_role'); // active le rôle à l'intialisation du plugin mais pas à chaque lecture de page
-register_deactivation_hook( __FILE__, 'photokit_remove_custom_role'); // retire le rôle lors de la désinstallation
 
+// Rôle custom client Photokit
+register_activation_hook (__FILE__, 'photokit_add_custom_role'); // active le rôle à l'intialisation du plugin mais pas à chaque lecture de page
+register_deactivation_hook( __FILE__, 'photokit_remove_custom_role'); // retire le rôle lors de la désactivation
+
+// Page du formulaire 
+register_activation_hook(__FILE__,'create_pk_reservation_form_page'); // active la page de formulaire 
+register_uninstall_hook(__FILE__,'deactivate_pk_reservation_form_page'); // la retire à la désinstallation
