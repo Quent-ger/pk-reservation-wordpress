@@ -34,3 +34,19 @@ function deactivate_pk_reservation_form_page(){ // fonction pour la suppression 
         delete_option('pk_formulaire_reservation_id'); // on enlève l'ID de la base de données 
     } 
 }
+
+// Le code du formulaire 
+
+function pk_formulaire(){
+    return '
+    <form>
+    <fieldset>
+    <legend> Détails de la réservation </legend>
+    
+    </fieldset>
+    </form>
+
+    ';
+};
+
+add_shortcode('pk_reservation_form','pk_formulaire');

@@ -6,13 +6,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 function pk_reservation_add_custom_boxes() {  // ajout de meta boxes custom pour les statuts de réservations
 
     if (current_user_can('manage_options')) {   // nécessaire que le coeur de wordpress soit chargé avant d'identifier si l'utiliasteur est admin
-        // meta box cachée pour la sécurité
-        add_meta_box(
-            'pk_box_reservation_nonce',                 // Unique ID
-			'Sécurité de la réservation',      // Box title
-			'pk_reservation_custom_box_nonce_html',  // Content callback, must be of type callable
-			'pk_reservation'                          // Post type
-        );
         
         // meta box pour le statut de réservation
         add_meta_box(
@@ -44,11 +37,12 @@ function pk_reservation_add_custom_boxes() {  // ajout de meta boxes custom pour
 
 add_action( 'add_meta_boxes', 'pk_reservation_add_custom_boxes' ); // quand wordpress charge les meta boxes, il viendra charger notre custom box
 
-    function pk_reservation_custom_box_nonce_html($post){
-        wp_nonce_field('pk_reservation_save_metaboxes_data', 'pk_reservation_meta_box_nonce');
-    }
 
     function pk_reservation_custom_box_status_html($post){  //code html pour la meta box Statut de réservation 
+
+        wp_nonce_field('pk_reservation_save_metaboxes_data', 'pk_reservation_meta_box_nonce'); // le nonce sera vérifié peu importe le champ soumis, meilleure UX, moins de code
+
+
         $current_status = get_post_meta( $post->ID, '_pk_reservation_status', true ); //WP récupére le statut de réservation actuellement défini pour ce post - assisté par IA
 
         if ( empty( $current_status ) ) { // Si c'est un nouveau post (l'ID est 0) et que la variable current_status n'est pas définie, cette dernière prend pending/en attente par défaut -- assisté par IA
