@@ -39,24 +39,102 @@ function deactivate_pk_reservation_form_page(){ // fonction pour la suppression 
 
 function pk_formulaire(){
     if(current_user_can('create_pk_reservations')){ // vérification que le client ait bien la permission pour afficher le formulaire
+        // Initialisation de variables pour récupérer les infos du compte, si non renseignées : vides, elles pourront être renseignées dans le formulaire
+        $customer_first_name = ''; 
+        $customer_last_name = ''; 
+        $customer_email = ''; 
+        
+        $current_user = wp_get_current_user(); // récupération de l'objet utilisateur en cours
+        $customer_first_name = $current_user->user_firstname; // méthode des objets pour récupérer les valeurs
+        $customer_last_name = $current_user->user_lastname;
+        $customer_email = $current_user->user_email;
+
+        // pour la logique des dates (simplifiée)
+
+        $min_date = date('Y-m-d');
+        $min_date_plus_one_year =  date('Y-m-d', strtotime('+1 year')); // limite générique max d'un an dans le futur 
+
+
         ob_start(); // début de la mémoire tampon -- HTML plus lisible
     ?>
-    <form action="">
-        <fieldset>
-            <legend>Informations personnelles</legend>
-            <input type="text" name="" id="">
-            <input type="text" name="" id="">
-            <input type="text" name="" id="">
-        </fieldset>
-        <fieldset>
-            <legend>Coordonnées</legend>
-        </fieldset>
-        <fieldset>
-            <legend>Détails de la réservation</legend>
-        </fieldset>
-        <input type="submit" value="Envoyer">
-        <input type="reset" value="Effacer">
+  <form id="pk-reservation-form" method="post">
+
+    <fieldset>
+        <legend>Informations personnelles</legend>
+
+        <p> <?php // name nécessaire pour récupérer les données par la suite, id doit être lié au for du label, préremplissage avec les données de compte, autocomplete pour l'UX ?>
+            <label for="pk_customer_firstname">Prénom : * </label>
+            <input type="text" name="pk_customer_firstname" id="pk_customer_firstname" value="<?php echo esc_attr($customer_first_name); ?>" autocomplete="given-name" required maxlength="30">
+        </p>
+
+        <p>
+            <label for="pk_customer_lastname">Nom : * </label>
+            <input type="text" name="pk_customer_lastname" id="pk_customer_lastname" value="<?php echo esc_attr($customer_last_name); ?>" autocomplete="family-name" required maxlength="50">
+        </p>
+
+        <p>
+            <label for="pk_customer_company">Société <span> (optionnel) </span> : </label>
+            <input type="text" name="pk_customer_company" id="pk_customer_company" placeholder="Société ou association" autocomplete="organization">
+        </p>
+
+    </fieldset>
+
+    <fieldset>
+        <legend>Coordonnées</legend>
+
+        <p>
+            <label for="pk_customer_email"> Email : * </label>
+            <input type="email" id="pk_customer_email" name="pk_customer_email" value="<?php echo esc_attr($customer_email); ?>" autocomplete="email" required>
+        </p>
+
+        <p>
+            <label for="pk_customer_address"> Adresse de livraison : * </label>
+            <input type="text" id="pk_customer_address" name="pk_customer_address" autocomplete="street-address" required>
+        </p>
+
+        <p>
+            <label for="pk_customer_postal_code">Code Postal : * </label>
+            <input type="text" id="pk_customer_postal_code" name="pk_customer_postal_code" autocomplete="postal-code" required maxlength="5">
+        </p>
+
+        <p>
+            <label for="pk_customer_city">Ville : * </label>
+            <input type="text" id="pk_customer_city" name="pk_customer_city" autocomplete="address-level2" required>
+        </p>
+
+        <p>
+            <label for="pk_customer_telephone"> Numéro de téléphone : * </label>
+            <input type="tel" id="pk_customer_telephone" name="pk_customer_phone" pattern="^0[1-9](?:[-. ]?\d{2}){4}$" placeholder="06 70 28 81 19" required>
+            <?php // placeholder pour donner une indication, expression du patter conforme aux numéros francais (en local)?>    
+        </p>
+
+    </fieldset>
+
+    <fieldset>
+        <legend>Détails de la réservation</legend>
+
+        <p>
+            <label for="pk_reservation_start_date"> Date de début de réservation : * </label>
+            <input type="date" id="pk_reservation_start_date" name="pk_reservation_start_date" min="<?php echo esc_attr($min_date); ?>" max="<?php echo esc_attr($min_date_plus_one_year); ?>" required>
+        </p>
+
+        <p>
+            <label for="pk_reservation_end_date"> Date de fin de réservation : * </label>
+            <input type="date" id="pk_reservation_end_date" name="pk_reservation_end_date" required>
+        </p>
+
+        <p>
+            <label for="pk_customer_message"> Votre message <span> (optionnel) </span> : </label>
+            <textarea id="pk_customer_message" name="pk_customer_message" placeholder="Votre message ici" rows="5"></textarea>
+        </p>
+
+    </fieldset>
+
+    <?php wp_nonce_field('pk_reservation_form_submit', 'pk_reservation_nonce_field'); ?>
+    <button type="submit">Envoyer ma réservation</button>
+
     </form>
+
     <?php return ob_get_clean(); // récupération des données dans la mémoire tampon
     }
     
