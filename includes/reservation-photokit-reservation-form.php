@@ -38,6 +38,7 @@ function deactivate_pk_reservation_form_page(){ // fonction pour la suppression 
 // Le code du formulaire 
 
 function pk_formulaire(){
+
     if(current_user_can('create_pk_reservations')){ // vérification que le client ait bien la permission pour afficher le formulaire
         // Initialisation de variables pour récupérer les infos du compte, si non renseignées : vides, elles pourront être renseignées dans le formulaire
         $customer_first_name = ''; 
@@ -57,6 +58,7 @@ function pk_formulaire(){
 
         ob_start(); // début de la mémoire tampon -- HTML plus lisible
     ?>
+
   <form id="pk-reservation-form" method="post">
 
     <fieldset>
@@ -64,12 +66,12 @@ function pk_formulaire(){
 
         <p> <?php // name nécessaire pour récupérer les données par la suite, id doit être lié au for du label, préremplissage avec les données de compte, autocomplete pour l'UX ?>
             <label for="pk_customer_firstname">Prénom : * </label>
-            <input type="text" name="pk_customer_firstname" id="pk_customer_firstname" value="<?php echo esc_attr($customer_first_name); ?>" autocomplete="given-name" required maxlength="30">
+            <input type="text" name="pk_customer_firstname" id="pk_customer_firstname" placeholder="Votre prénom" value="<?php echo esc_attr($customer_first_name); ?>" autocomplete="given-name" required maxlength="30">
         </p>
 
         <p>
             <label for="pk_customer_lastname">Nom : * </label>
-            <input type="text" name="pk_customer_lastname" id="pk_customer_lastname" value="<?php echo esc_attr($customer_last_name); ?>" autocomplete="family-name" required maxlength="50">
+            <input type="text" name="pk_customer_lastname" id="pk_customer_lastname" placeholder="Votre nom" value="<?php echo esc_attr($customer_last_name); ?>" autocomplete="family-name" required maxlength="50">
         </p>
 
         <p>
@@ -84,22 +86,22 @@ function pk_formulaire(){
 
         <p>
             <label for="pk_customer_email"> Email : * </label>
-            <input type="email" id="pk_customer_email" name="pk_customer_email" value="<?php echo esc_attr($customer_email); ?>" autocomplete="email" required>
+            <input type="email" id="pk_customer_email" name="pk_customer_email" placeholder="adresse@messagerie.fr"value="<?php echo esc_attr($customer_email); ?>" autocomplete="email" required>
         </p>
 
         <p>
             <label for="pk_customer_address"> Adresse de livraison : * </label>
-            <input type="text" id="pk_customer_address" name="pk_customer_address" autocomplete="street-address" required>
+            <input type="text" id="pk_customer_address" name="pk_customer_address" placeholder="3, rue de la fraise" autocomplete="street-address" required>
         </p>
 
         <p>
             <label for="pk_customer_postal_code">Code Postal : * </label>
-            <input type="text" id="pk_customer_postal_code" name="pk_customer_postal_code" autocomplete="postal-code" required maxlength="5">
+            <input type="text" id="pk_customer_postal_code" name="pk_customer_postal_code" placeholder="29000" autocomplete="postal-code" required maxlength="5">
         </p>
 
         <p>
             <label for="pk_customer_city">Ville : * </label>
-            <input type="text" id="pk_customer_city" name="pk_customer_city" autocomplete="address-level2" required>
+            <input type="text" id="pk_customer_city" name="pk_customer_city" placeholder="Brest" autocomplete="address-level2" required>
         </p>
 
         <p>
@@ -131,13 +133,19 @@ function pk_formulaire(){
     </fieldset>
 
     <?php wp_nonce_field('pk_reservation_form_submit', 'pk_reservation_nonce_field'); ?>
+    <input type="hidden" name="action" value="pk_traitement_reservation_form"> <?php // nécessaire pour indiquer l'actoin à wordpress ?>
     <button type="submit">Envoyer ma réservation</button>
 
     </form>
 
     <?php return ob_get_clean(); // récupération des données dans la mémoire tampon
     }
-    
+
+
 };
 
 add_shortcode('pk_reservation_form','pk_formulaire');
+
+function pk_traitement_resevartion_form() {
+
+}

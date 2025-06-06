@@ -55,3 +55,26 @@ register_deactivation_hook( __FILE__, 'photokit_remove_custom_role'); // retire 
 // Page du formulaire 
 register_activation_hook(__FILE__,'create_pk_reservation_form_page'); // active la page de formulaire 
 register_uninstall_hook(__FILE__,'deactivate_pk_reservation_form_page'); // la retire à la désinstallation
+
+// Chargement des fichiers css et js pour le formulaire
+function pk_enqueue_reservation_assets() {
+    // Enqueue le fichier CSS
+    wp_enqueue_style(
+        'pk-reservation-style',
+        plugin_dir_url(__FILE__) . 'css/photokit-form.css',
+        array(),
+        '1.0.0'
+    );
+
+    // Enqueue le fichier JavaScript 
+    wp_enqueue_script(
+        'pk-reservation-script',
+        plugin_dir_url(__FILE__) . 'js/photokit-form.js',
+        array(), 
+        '1.0.0',
+        true
+    );
+
+}
+
+add_action('wp_enqueue_scripts', 'pk_enqueue_reservation_assets');
