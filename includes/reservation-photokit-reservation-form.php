@@ -38,15 +38,28 @@ function deactivate_pk_reservation_form_page(){ // fonction pour la suppression 
 // Le code du formulaire 
 
 function pk_formulaire(){
-    return '
-    <form>
-    <fieldset>
-    <legend> Détails de la réservation </legend>
-    
-    </fieldset>
+    if(current_user_can('create_pk_reservations')){ // vérification que le client ait bien la permission pour afficher le formulaire
+        ob_start(); // début de la mémoire tampon -- HTML plus lisible
+    ?>
+    <form action="">
+        <fieldset>
+            <legend>Informations personnelles</legend>
+            <input type="text" name="" id="">
+            <input type="text" name="" id="">
+            <input type="text" name="" id="">
+        </fieldset>
+        <fieldset>
+            <legend>Coordonnées</legend>
+        </fieldset>
+        <fieldset>
+            <legend>Détails de la réservation</legend>
+        </fieldset>
+        <input type="submit" value="Envoyer">
+        <input type="reset" value="Effacer">
     </form>
-
-    ';
+    <?php return ob_get_clean(); // récupération des données dans la mémoire tampon
+    }
+    
 };
 
 add_shortcode('pk_reservation_form','pk_formulaire');
