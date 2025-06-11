@@ -24,7 +24,8 @@ if ( ! defined( 'PKRESERVATION_INC_DIR' ) ) {
 // Inclusion des fichiers de fonctionalité
 $pk_reservation_required_files = array (
     'reservation-photokit-cpt.php',
-    'reservation-photokit-meta.php',
+    'reservation-photokit-meta-new.php',
+    'reservation-photokit-meta-save.php',
     'reservation-photokit-custom-role.php',
     'reservation-photokit-reservation-form.php',
 );

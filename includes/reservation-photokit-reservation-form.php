@@ -66,7 +66,7 @@ function pk_formulaire(){
 
         <p> <?php // name nécessaire pour récupérer les données par la suite, id doit être lié au for du label, préremplissage avec les données de compte, autocomplete pour l'UX ?>
             <label for="pk_customer_firstname">Prénom : * </label>
-            <input type="text" name="pk_customer_firstname" id="pk_customer_firstname" placeholder="Votre prénom" value="<?php echo esc_attr($customer_first_name); ?>" autocomplete="given-name" required maxlength="30">
+            <input type="text" name="pk_customer_firstname" id="pk_customer_firstname" placeholder="Votre prénom" value="<?php echo esc_attr($customer_first_name); ?>" autocomplete="given-name" required maxlength="35">
         </p>
 
         <p>
@@ -146,6 +146,61 @@ function pk_formulaire(){
 
 add_shortcode('pk_reservation_form','pk_formulaire');
 
-function pk_traitement_resevartion_form() {
+function pk_traitement_reservation_form() {
+    // Vérifications de sécurité
+
+        // Vérification du nonce
+        if (!isset($_POST['pk_reservation_nonce_field'])) {
+            wp_die ('Erreur de sécurité : Tentative de soumission du formulaire non autorisée ou nonce invalide');
+        }
+        
+        // Vérification de la méthode de requête
+        if ( $_SERVER['REQUEST_METHOD'] !== 'POST') {
+            wp_die('Méthode invalide');
+        }
+
+
+    // Initialisation de tableaux pour les erreurs et pour les données validées
+        $errors = array();
+        $verified_data = array();
+
+    // Traitement et validation
+
+    // Prénom
+    if ( empty( $_POST['pk_customer_firstname']) ) {
+        $errors[] = 'Le prénom est requis.';
+    } else {
+        // étape 1 : 
+        $first_name_sanitized = sanitize_text_field( $_POST['pk_customer_firstname']);
+
+        // étape 2 : vérification  de la longueur de chaîne de caractères
+        if (strlen($first_name_sanitized)>35) {
+            $errors[] = 'Le prénom ne peut dépasser 35 caractères';
+        } else {
+            $verified_data['pk_customer_firstname'] = $first_name_sanitized;
+        }
+    }
+
+    // Nom
+    if ( empty( $_POST['pk_customer_lastname']) ) {
+        $errors[] = 'Le nom de famille est requis.';
+    } else {
+        // étape 1 : 
+        $last_name_sanitized = sanitize_text_field( $_POST['pk_customer_lastname']);
+
+        // étape 2 : vérification  de la longueur de chaîne de caractères
+        if (strlen($first_name_sanitized)>50) {
+            $errors[] = 'Le nom de famille ne peut dépasser 50 caractères';
+        } else {
+            $verified_data['pk_customer_lastname'] = $last_name_sanitized;
+        }
+    }
+
+    // Société (optionnel) 
+    if (! empty($_POST['pk_customer_company'])) {
+        $verified_data['pk_customer_company'] = sanitize_text_field( $_POST['pk_customer_company']) ;
+    } else {
+        $verified_data['pk_customer_company'] = ''; // s'assurer qu'il-y-a une valeur pour l'enregistrement 
+    }
 
 }
