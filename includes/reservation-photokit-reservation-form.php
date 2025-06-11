@@ -86,7 +86,13 @@ function pk_formulaire(){
 
         <p>
             <label for="pk_customer_email"> Email : * </label>
-            <input type="email" id="pk_customer_email" name="pk_customer_email" placeholder="adresse@messagerie.fr"value="<?php echo esc_attr($customer_email); ?>" autocomplete="email" required>
+            <input type="email" id="pk_customer_email" name="pk_customer_email" placeholder="adresse@messagerie.fr" value="<?php echo esc_attr($customer_email); ?>" autocomplete="email" required>
+        </p>
+
+        <p>
+            <label for="pk_customer_telephone"> Numéro de téléphone : * </label>
+            <input type="tel" id="pk_customer_telephone" name="pk_customer_phone" pattern="^0[1-9](?:[-. ]?\d{2}){4}$" placeholder="06 70 28 81 19" required>
+            <?php // placeholder pour donner une indication, expression du patter conforme aux numéros francais (en local)?>    
         </p>
 
         <p>
@@ -102,12 +108,6 @@ function pk_formulaire(){
         <p>
             <label for="pk_customer_city">Ville : * </label>
             <input type="text" id="pk_customer_city" name="pk_customer_city" placeholder="Brest" autocomplete="address-level2" required>
-        </p>
-
-        <p>
-            <label for="pk_customer_telephone"> Numéro de téléphone : * </label>
-            <input type="tel" id="pk_customer_telephone" name="pk_customer_phone" pattern="^0[1-9](?:[-. ]?\d{2}){4}$" placeholder="06 70 28 81 19" required>
-            <?php // placeholder pour donner une indication, expression du patter conforme aux numéros francais (en local)?>    
         </p>
 
     </fieldset>
@@ -145,62 +145,3 @@ function pk_formulaire(){
 };
 
 add_shortcode('pk_reservation_form','pk_formulaire');
-
-function pk_traitement_reservation_form() {
-    // Vérifications de sécurité
-
-        // Vérification du nonce
-        if (!isset($_POST['pk_reservation_nonce_field'])) {
-            wp_die ('Erreur de sécurité : Tentative de soumission du formulaire non autorisée ou nonce invalide');
-        }
-        
-        // Vérification de la méthode de requête
-        if ( $_SERVER['REQUEST_METHOD'] !== 'POST') {
-            wp_die('Méthode invalide');
-        }
-
-
-    // Initialisation de tableaux pour les erreurs et pour les données validées
-        $errors = array();
-        $verified_data = array();
-
-    // Traitement et validation
-
-    // Prénom
-    if ( empty( $_POST['pk_customer_firstname']) ) {
-        $errors[] = 'Le prénom est requis.';
-    } else {
-        // étape 1 : 
-        $first_name_sanitized = sanitize_text_field( $_POST['pk_customer_firstname']);
-
-        // étape 2 : vérification  de la longueur de chaîne de caractères
-        if (strlen($first_name_sanitized)>35) {
-            $errors[] = 'Le prénom ne peut dépasser 35 caractères';
-        } else {
-            $verified_data['pk_customer_firstname'] = $first_name_sanitized;
-        }
-    }
-
-    // Nom
-    if ( empty( $_POST['pk_customer_lastname']) ) {
-        $errors[] = 'Le nom de famille est requis.';
-    } else {
-        // étape 1 : 
-        $last_name_sanitized = sanitize_text_field( $_POST['pk_customer_lastname']);
-
-        // étape 2 : vérification  de la longueur de chaîne de caractères
-        if (strlen($first_name_sanitized)>50) {
-            $errors[] = 'Le nom de famille ne peut dépasser 50 caractères';
-        } else {
-            $verified_data['pk_customer_lastname'] = $last_name_sanitized;
-        }
-    }
-
-    // Société (optionnel) 
-    if (! empty($_POST['pk_customer_company'])) {
-        $verified_data['pk_customer_company'] = sanitize_text_field( $_POST['pk_customer_company']) ;
-    } else {
-        $verified_data['pk_customer_company'] = ''; // s'assurer qu'il-y-a une valeur pour l'enregistrement 
-    }
-
-}

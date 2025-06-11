@@ -67,7 +67,7 @@ add_action( 'add_meta_boxes', 'pk_reservation_add_custom_boxes' ); // quand word
     ?>
         
         <!--le HTML de la meta box détails de réservation -->
-        <label for="pk_reservation_status_field">Statut de la réservation </label>
+        <label for="pk_reservation_status_field">Statut de la réservation : </label>
         <select name="pk_reservation_status_field" id="pk_reservation_status_field" class="postbox">
             <option value="">Veuillez sélectionner une option </option>
             <option value="confirm" <?php selected( $current_status, 'confirm' ); ?> > <span class="dashicons dashicons-yes"></span>  Approuvée </option> <?php /* Utilisation de la fonction helper selected() de WP */ ?>
@@ -96,7 +96,7 @@ add_action( 'add_meta_boxes', 'pk_reservation_add_custom_boxes' ); // quand word
 
         <p>
         <strong>Prénom : </strong><?php echo esc_html($first_name); ?> 
-        <strong>Nom : </strong><?php echo esc_html(' ' . $last_name); ?> <br />
+        <strong>Nom : </strong><?php echo esc_html(' ' . $last_name); ?>
         </p> 
         <?php if ( ! empty ($company) ) : ?>
         <p><strong>Société : </strong><?php echo esc_html($company); ?></p> <br />

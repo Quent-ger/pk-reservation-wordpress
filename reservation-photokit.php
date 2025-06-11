@@ -28,6 +28,8 @@ $pk_reservation_required_files = array (
     'reservation-photokit-meta-save.php',
     'reservation-photokit-custom-role.php',
     'reservation-photokit-reservation-form.php',
+    'reservation-photokit-traitement-form.php',
+
 );
 
 foreach ($pk_reservation_required_files as $pk_plugin_file) {

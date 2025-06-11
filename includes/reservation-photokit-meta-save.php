@@ -77,6 +77,7 @@
         
             update_post_meta( $post_id, '_pk_reservation_begin_date', $new_begin_date );
             update_post_meta( $post_id, '_pk_reservation_end_date', $new_end_date );
+
         
 }
 
