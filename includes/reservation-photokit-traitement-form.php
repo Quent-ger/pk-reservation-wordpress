@@ -7,7 +7,7 @@
         }
 
         // Vérification de la valeur du nonce
-         if (!wp_verify_nonce($_POST['pk_reservation_nonce_field'], 'pk_reservation_nonce_action')) {
+         if (!wp_verify_nonce($_POST['pk_reservation_nonce_field'], 'pk_reservation_nonce_submit')) {
             wp_die('Erreur de sécurité : Nonce invalide.');
         }
 
@@ -20,38 +20,49 @@
 
 
     // Initialisation de tableaux pour les erreurs et pour les données validées
-        $errors = array();
-        $verified_data = array();
+        $errors = [];
+        $verified_data = [];
+
+        // On met tout dans des variables temporaires après sanitization
+        $temp_first_name    = isset($_POST['pk_customer_firstname']) ? sanitize_text_field($_POST['pk_customer_firstname']) : '';
+        $temp_last_name     = isset($_POST['pk_customer_lastname']) ? sanitize_text_field($_POST['pk_customer_lastname']) : '';
+        $temp_company       = isset($_POST['pk_customer_company']) ? sanitize_text_field($_POST['pk_customer_company']) : '';
+        $temp_email         = isset($_POST['pk_customer_email']) ? sanitize_email($_POST['pk_customer_email']) : '';
+        $temp_phone         = isset($_POST['pk_customer_telephone']) ? sanitize_text_field($_POST['pk_customer_telephone']) : '';
+        $temp_address       = isset($_POST['pk_customer_address']) ? sanitize_text_field($_POST['pk_customer_address']) : '';
+        $temp_postal_code   = isset($_POST['pk_customer_postal_code']) ? sanitize_text_field($_POST['pk_customer_postal_code']) : '';
+        $temp_city          = isset($_POST['pk_customer_city']) ? sanitize_text_field($_POST['pk_customer_city']) : '';
+        $temp_start_date    = isset($_POST['pk_reservation_start_date']) ? sanitize_text_field($_POST['pk_reservation_start_date']) : '';
+        $temp_end_date      = isset($_POST['pk_reservation_end_date']) ? sanitize_text_field($_POST['pk_reservation_end_date']) : '';
+        $temp_message       = isset($_POST['pk_customer_message']) ? wp_kses_post($_POST['pk_customer_message']) : ''; // Pour textarea
 
     // Traitement et validation
         
+    
     // infos personnelles
 
         // Prénom
-        if ( empty( $_POST['pk_customer_firstname']) ) { // si le champ est vide
-            $errors[] = 'Le prénom est requis.'; // on ajoute une erreur
+        if ( empty( $temp_first_name) ) { // si la variable est vide
+            $errors['pk_customer_firstname'] = 'Le prénom est requis.'; // on ajoute une erreur
         } else {
-            // étape 1 : 
-            $first_name_sanitized = sanitize_text_field( $_POST['pk_customer_firstname']); 
-
-            // étape 2 : vérification  de la longueur de chaîne de caractères
-            if (strlen($first_name_sanitized)>35) {
-                $errors[] = 'Le prénom ne peut dépasser 35 caractères';
+            // étape : vérification  de la longueur de chaîne de caractères
+            if (strlen($temp_first_name)>35) {
+                $errors['pk_customer_firstname'] = 'Le prénom ne peut dépasser 35 caractères';
             } else {
-                $verified_data['pk_customer_firstname'] = $first_name_sanitized; // on l'enregistre
+                $verified_data['pk_customer_firstname'] = $temp_first_name; // on l'enregistre
             }
         }
 
         // Nom
         if ( empty( $_POST['pk_customer_lastname']) ) {
-            $errors[] = 'Le nom de famille est requis.';
+            $errors['pk_customer_lastname'] = 'Le nom de famille est requis.';
         } else {
             // étape 1 : 
             $last_name_sanitized = sanitize_text_field( $_POST['pk_customer_lastname']);
 
             // étape 2 : vérification  de la longueur de chaîne de caractères
             if (strlen($last_name_sanitized)>50) {
-                $errors[] = 'Le nom de famille ne peut dépasser 50 caractères';
+                $errors['pk_customer_lastname'] = 'Le nom de famille ne peut dépasser 50 caractères';
             } else {
                 $verified_data['pk_customer_lastname'] = $last_name_sanitized;
             }
@@ -68,12 +79,12 @@
 
         // Email
         if (empty ($_POST['pk_customer_email'])) {
-            $errors[] = 'L\'adresse email est requise';
+            $errors['pk_customer_email'] = 'L\'adresse email est requise';
         } else {
             $email = sanitize_email($_POST['pk_customer_email']);
 
             if ( ! is_email($email) ) {
-                $errors[]= 'L\'adresse mail n\'est pas valide';
+                $errors['pk_customer_email']= 'L\'adresse mail n\'est pas valide';
             }
             
             else {
@@ -83,7 +94,7 @@
         
         // Téléphone
          if (empty ($_POST['pk_customer_telephone'])) {
-            $errors[] = 'Le numéro de téléphone est requis';
+            $errors['pk_customer_telephone'] = 'Le numéro de téléphone est requis';
         } else {
             $telephone = $_POST['pk_customer_telephone'];
 
@@ -93,7 +104,7 @@
             $cleaned_telephone = trim($telephone); // on enlève lesespaces
             
             if ( !preg_match ($french_phone_regex, $cleaned_telephone)) { // comparaison du numéro entré à l'expression régulière
-                $errors[] = 'Le numéro de téléphone n\'est pas valide';
+                $errors['pk_customer_telephone'] = 'Le numéro de téléphone n\'est pas valide';
             } else {
                 $verified_data['pk_customer_telephone'] = preg_replace('/[^0-9+]/', '', $cleaned_telephone); // enlève tous les caractères non-numériques lors de l'enregistrement
             }
@@ -103,7 +114,7 @@
         // Adresse 
 
         if (empty($_POST['pk_customer_address'])) {
-            $errors[] = 'L\'adresse est requise.';
+            $errors['pk_customer_address'] = 'L\'adresse est requise.';
         } else {
             $address = $_POST['pk_customer_address'];
 
@@ -114,9 +125,9 @@
             $max_length = 100;
 
             if (strlen($sanitized_address) < $min_length) { 
-                $errors[] = 'L\'adresse est trop courte.';
+                $errors['pk_customer_address'] = 'L\'adresse est trop courte.';
             } elseif (strlen($sanitized_address) > $max_length) {
-                $errors[] = 'L\'adresse est trop longue.';
+                $errors['pk_customer_address'] = 'L\'adresse est trop longue.';
             } else {
                 $verified_data['pk_customer_address'] = $sanitized_address;
             }
@@ -124,7 +135,7 @@
 
         // Code Postal
         if (empty($_POST['pk_customer_postal_code'])) {
-            $errors[] = 'Le code postal est requis.';
+            $errors['pk_customer_postal_code'] = 'Le code postal est requis.';
         } else {
             $postal_code = $_POST['pk_customer_postal_code'];
 
@@ -132,7 +143,7 @@
 
             // Vérification regex du format de code postal français
             if (!preg_match('/^\s*\d{5}\s*$/', $sanitized_postal_code)) {   
-                $errors[] = 'Le code postal n\'est pas valide (format incorrect).';
+                $errors['pk_customer_postal_code'] = 'Le code postal n\'est pas valide (format incorrect).';
             } else {
                 $verified_data['pk_customer_postal_code'] = $sanitized_postal_code;
             }
@@ -141,7 +152,7 @@
 
         // Ville
         if (empty($_POST['pk_customer_city'])) {
-            $errors[] = 'La ville est requise.';
+            $errors['pk_customer_city'] = 'La ville est requise.';
         } else {
             $city = $_POST['pk_customer_city'];
 
@@ -151,7 +162,7 @@
             $max_length = 50;  //  au moins Saint-Remy-en-Bouzemont-Saint-Genest-et-Isson et de la marge
 
             if (strlen($sanitized_city) > $max_length) { // comparaison de longueur supérieure au max
-                $errors[] = 'Le nom de la ville est trop long.';
+                $errors['pk_customer_city'] = 'Le nom de la ville est trop long.';
             } else {
                 $verified_data['pk_customer_city'] = $sanitized_city;
             }
@@ -161,7 +172,7 @@
 
         // Date de début -- assisté par IA
         if (empty ($_POST['pk_reservation_start_date'])) {
-            $errors[] = 'La date de début de réservation est obligatoire';
+            $errors['pk_reservation_start_date'] = 'La date de début de réservation est obligatoire';
         } else {
             $start_date = $_POST['pk_reservation_start_date'];
             $sanitized_start_date = sanitize_text_field($start_date);
@@ -171,7 +182,7 @@
 
             // Vérifie si la date est valide ET si elle correspond au format exact
             if (!$start_date_object || $start_date_object->format('Y-m-d') !== $sanitized_start_date) {
-            $errors[] = 'Format de la date de début invalide.';
+            $errors['pk_reservation_start_date'] = 'Format de la date de début invalide.';
             } else {
 
                 // Obtenir la date d'aujourd'hui sans l'heure pour la comparaison
@@ -180,7 +191,7 @@
 
                 // Vérifier si la date de début n'est pas dans le passé
                     if ($start_date_object < $today) {
-                        $errors[] = 'La date de début ne peut pas être dans le passé.';
+                        $errors['pk_reservation_start_date'] = 'La date de début ne peut pas être dans le passé.';
                     } else {
                         // Si tout est bon, stocker la date nettoyée
                         $verified_data['pk_reservation_start_date'] = $sanitized_start_date;
@@ -192,10 +203,10 @@
 
         // Date de fin
         if( !isset ( $verified_data['pk_reservation_start_date'] ) ) { // si aucune date de début n'a été définie
-            $errors[] = 'La réservation doit d\'abord comporter une date de début valide.'; 
+            $errors['pk_reservation_end_date'] = 'La réservation doit d\'abord comporter une date de début valide.'; 
 
         } elseif (empty( $_POST['pk_reservation_end_date'])) {
-                $errors[] = 'La date de fin de réservation est obligatoire';
+                $errors['pk_reservation_end_date'] = 'La date de fin de réservation est obligatoire';
 
         } else {
 
@@ -215,7 +226,7 @@
 
             // Si l'objet end_date existe et que la valeur end_date récupérée du formulaire sont égales à la date de fin prévue (1 semaine après)
             if (!$end_date_object || $sanitized_end_date !== $expected_end_date_string) {
-                $errors[] = 'La date de fin de réservation doit être une semaine après la date de début (' . esc_html($expected_end_date_string) . ').';
+                $errors['pk_reservation_end_date'] = 'La date de fin de réservation doit être une semaine après la date de début (' . esc_html($expected_end_date_string) . ').';
             } else {
                 $verified_data['pk_reservation_end_date'] = $sanitized_end_date;
             }
@@ -233,11 +244,31 @@
         $max_message_length = 500; // longeur max du messsage
 
         if (strlen($sanitized_message) > $max_message_length) { // si le message sanitizé et nettoyé dépasse 500 caractères
-            $errors[] = 'Votre message est trop long (maximum ' . $max_message_length . ' caractères).';
+            $errors['pk_customer_message'] = 'Votre message est trop long (maximum ' . $max_message_length . ' caractères).';
         } else {
             $verified_data['pk_customer_message'] = $sanitized_message;
         }
     }
 
 
+// --- GESTION DES ERREURS ET DES DONNEES VALIDEES ---
+
+    // Si des erreurs existent, on ne fait rien de plus que les stocker
+    if ( ! empty($errors) ) {
+        // Stocke les erreurs et les données soumises (même invalides) en session pour pouvoir les réafficher sur le formulaire.
+        // stockage dans des transient pour redirection.
+        set_transient( 'pk_form_errors', $errors, HOUR_IN_SECONDS ); // set transient = mise en cache temporaire dans la base de données ~ options mais limitées
+        set_transient( 'pk_form_data', $_POST, HOUR_IN_SECONDS ); // Stocke $_POST tel quel pour pré-remplir le formulaire (amélioration UX)
+        
+        // Redirection vers la page du formulaire avec les erreurs
+        $form_page_url = get_permalink( get_option('pk_formulaire_reservation_id') ); // récupère l'ID de la page du formulaire
+        wp_redirect( $form_page_url. '?status=error'); // redirige cette page avec un message dans l'URL pour indiquer une erreur dans le remplissage
+        exit; // nécessaire après un wp_redirect, assure que le code suivant n'est pas traité
+    } 
+
 } // fin de la fonction de traitement
+
+
+ 
+
+    

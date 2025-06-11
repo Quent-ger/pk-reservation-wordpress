@@ -30,7 +30,7 @@ function pk_reservation_add_custom_boxes() {  // ajout de meta boxes custom pour
 			'pk_reservation_delivery_box_html',  // Content callback, must be of type callable
 			'pk_reservation'                          // Post type
 	        );
-	    }
+	    
 
         // meta pour le message client (textarea)
         add_meta_box(
@@ -40,6 +40,7 @@ function pk_reservation_add_custom_boxes() {  // ajout de meta boxes custom pour
 			'pk_reservation'                          // Post type
 	        );
     }
+}
 
 add_action( 'add_meta_boxes', 'pk_reservation_add_custom_boxes' ); // quand wordpress charge les meta boxes, il viendra charger notre custom box
 
@@ -57,7 +58,7 @@ add_action( 'add_meta_boxes', 'pk_reservation_add_custom_boxes' ); // quand word
         }
 
         // Obtenir la valeur de la date de début de réservation
-        $current_begin_date = get_post_meta($post->ID, '_pk_reservation_begin_date', true);
+        $current_begin_date = get_post_meta($post->ID, '_pk_reservation_start_date', true);
 
         // Obtenir la valeur de la date de fin de réservation
         $today_date = current_time("Y-m-d");
