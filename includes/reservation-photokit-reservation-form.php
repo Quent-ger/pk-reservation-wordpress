@@ -59,7 +59,7 @@ function pk_formulaire(){
         ob_start(); // début de la mémoire tampon -- HTML plus lisible
     ?>
 
-  <form id="pk-reservation-form" method="post">
+  <form id="pk-reservation-form" method="post" action="<?php echo esc_url( admin_url('admin-post.php') ); ?>">
 
     <fieldset>
         <legend>Informations personnelles</legend>
@@ -91,7 +91,7 @@ function pk_formulaire(){
 
         <p>
             <label for="pk_customer_telephone"> Numéro de téléphone : * </label>
-            <input type="tel" id="pk_customer_telephone" name="pk_customer_phone" pattern="^0[1-9](?:[-. ]?\d{2}){4}$" placeholder="06 70 28 81 19" required>
+            <input type="tel" id="pk_customer_telephone" name="pk_customer_telephone" pattern="^0[1-9](?:[-. ]?\d{2}){4}$" placeholder="06 70 28 81 19" required>
             <?php // placeholder pour donner une indication, expression du patter conforme aux numéros francais (en local)?>    
         </p>
 
@@ -132,7 +132,7 @@ function pk_formulaire(){
 
     </fieldset>
 
-    <?php wp_nonce_field('pk_reservation_form_submit', 'pk_reservation_nonce_field'); ?>
+    <?php wp_nonce_field('pk_reservation_form_submit', 'pk_reservation_nonce_submit'); ?>
     <input type="hidden" name="action" value="pk_traitement_reservation_form"> <?php // nécessaire pour indiquer l'actoin à wordpress ?>
     <button type="submit">Envoyer ma réservation</button>
 

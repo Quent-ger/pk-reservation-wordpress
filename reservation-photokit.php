@@ -59,6 +59,9 @@ register_deactivation_hook( __FILE__, 'photokit_remove_custom_role'); // retire 
 register_activation_hook(__FILE__,'create_pk_reservation_form_page'); // active la page de formulaire 
 register_uninstall_hook(__FILE__,'deactivate_pk_reservation_form_page'); // la retire à la désinstallation
 
+// Traitement du formulaire 
+add_action( 'admin_post_pk_traitement_reservation_form', 'pk_traitement_reservation_form' );
+
 // Chargement des fichiers css et js pour le formulaire
 function pk_enqueue_reservation_assets() {
     // Enqueue le fichier CSS
