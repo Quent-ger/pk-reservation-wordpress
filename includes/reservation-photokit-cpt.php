@@ -27,6 +27,7 @@ function photokit_register_pkreservation_post_type() {  // préfixe photokit pou
         'show_in_rest' => true,
         'supports' => array('title', 'author'),
 
+        /*
         'capabilities' => array( // définition des capabilités - nécessaires pour que le rôle pk_customer ne puisse pas modifier ou accèder aux posts des autres (confidentialité)
         'edit_post'          => 'edit_pk_reservation',         // Peut éditer un post individuel
         'read_post'          => 'read_pk_reservation',         // Peut lire un post individuel
@@ -36,7 +37,8 @@ function photokit_register_pkreservation_post_type() {  // préfixe photokit pou
         'publish_posts'      => 'publish_pk_reservations',     // Peut publier/créer des posts
         'read_private_posts' => 'read_private_pk_reservations',// Peut lire les posts privés
         'create_posts'       => 'edit_pk_reservations',         // Souvent lié à 'edit_posts' pour la création
-        ),
+        ),*/
+        'capability_type'    => 'pk_reservation',
         'map_meta_cap' => true // fonction wordpress qui permet de traduire les rôles personnalisés et de les mettre en accord avec son moteur interne
     );
     register_post_type( 'pk_reservation', $args );

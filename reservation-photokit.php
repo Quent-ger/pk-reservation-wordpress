@@ -64,7 +64,7 @@ add_action( 'admin_post_pk_traitement_reservation_form', 'pk_traitement_reservat
 
 // Chargement des fichiers css et js pour le formulaire
 function pk_enqueue_reservation_assets() {
-    // Enqueue le fichier CSS
+    // Charge le fichier CSS
     wp_enqueue_style(
         'pk-reservation-style',
         plugin_dir_url(__FILE__) . 'css/photokit-form.css',
@@ -72,7 +72,7 @@ function pk_enqueue_reservation_assets() {
         '1.0.0'
     );
 
-    // Enqueue le fichier JavaScript 
+    // Charge  le fichier JavaScript 
     wp_enqueue_script(
         'pk-reservation-script',
         plugin_dir_url(__FILE__) . 'js/photokit-form.js',

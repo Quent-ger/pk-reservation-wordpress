@@ -237,7 +237,7 @@
         
         // Redirection vers la page du formulaire avec les erreurs
         $form_page_url = get_permalink( get_option('pk_formulaire_reservation_id') ); // récupère l'ID de la page du formulaire
-        wp_redirect( $form_page_url. '?status=error1'); // redirige cette page avec un message dans l'URL pour indiquer une erreur dans le remplissage
+        wp_redirect( $form_page_url. '?status=erreur_validation'); // redirige cette page avec un message dans l'URL pour indiquer une erreur dans le remplissage
         exit; // nécessaire après un wp_redirect, assure que le code suivant n'est pas traité
     } else {
 
@@ -246,7 +246,6 @@
         // Créer un nouveau post 
         $post_id = wp_insert_post([
             'post_title' => 'Réservation du ' . $verified_data['pk_reservation_start_date'] . ' par ' . $verified_data['pk_customer_firstname'] . ' ' . $verified_data['pk_customer_lastname'],
-            'post_status' => 'pending', // pour être sûr qu'il soiten attente par défaut
             'post_type' => 'pk_reservation', // C'est un post du CPT pk_reservation
         ]);
 
@@ -257,7 +256,7 @@
             set_transient( 'pk_form_errors', $errors, HOUR_IN_SECONDS );
             set_transient( 'pk_form_data', $_POST, HOUR_IN_SECONDS );
             $form_page_url = get_permalink( get_option('pk_formulaire_reservation_id') );
-            wp_redirect( $form_page_url . '?status=error2');
+            wp_redirect( $form_page_url . '?status=erreur_enregistrement');
             exit;
         }
 
