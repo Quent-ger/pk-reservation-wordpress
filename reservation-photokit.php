@@ -36,6 +36,7 @@ foreach ($pk_reservation_required_files as $pk_plugin_file) {
     require_once PKRESERVATION_INC_DIR . $pk_plugin_file;
 } 
 
+
 /* Ancienne strucure d'inclusion conservée en cas
 require_once PKRESERVATION_PLUGIN_DIR . 'includes/reservation-photokit-cpt.php';
 
