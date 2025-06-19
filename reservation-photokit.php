@@ -24,7 +24,7 @@ if ( ! defined( 'PKRESERVATION_INC_DIR' ) ) {
 // Inclusion des fichiers de fonctionalité
 $pk_reservation_required_files = array (
     'reservation-photokit-cpt.php',
-    'reservation-photokit-meta-new.php',
+    'reservation-photokit-meta.php',
     'reservation-photokit-meta-save.php',
     'reservation-photokit-custom-role.php',
     'reservation-photokit-reservation-form.php',
@@ -51,6 +51,11 @@ require_once PKRESERVATION_PLUGIN_DIR . 'includes/reservation-photokit-reservati
 */
 
 // Hooks d'activation et désactivation
+
+// Permissions du CPT pour l'admin
+register_activation_hook (__FILE__, 'photokit_add_admin_caps'); // donne le rôle pour les CPTs à l'admin à l'activation
+register_deactivation_hook( __FILE__, 'photokit_remove_admin_caps'); // les retire à la désactivation
+
 
 // Rôle custom client Photokit
 register_activation_hook (__FILE__, 'photokit_add_custom_role'); // active le rôle à l'intialisation du plugin mais pas à chaque lecture de page

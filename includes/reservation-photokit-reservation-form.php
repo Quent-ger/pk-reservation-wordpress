@@ -39,7 +39,7 @@ function deactivate_pk_reservation_form_page(){ // fonction pour la suppression 
 
 function pk_formulaire(){
 
-    if(current_user_can('create_pk_reservations')){ // vérification que le client ait bien la permission pour afficher le formulaire
+    if(current_user_can('create_pk_reservations') || current_user_can('manage_options') ){ // vérification que le client ait bien la permission pour afficher le formulaire
         
         
         // Récupération des erreurs et des données transmises via les transients
