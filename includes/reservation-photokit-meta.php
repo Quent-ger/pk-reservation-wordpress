@@ -124,12 +124,12 @@ add_action( 'add_meta_boxes', 'pk_reservation_add_custom_boxes' ); // quand word
     <?php }
 
     function pk_reservation_customer_message_html ($post) { // HTML pour le message client
-        $message = get_post_meta ( $post->ID, '_pk_customer_message', true );
+        $pk_message = get_post_meta ( $post->ID, '_pk_customer_message', true );
     ?>             
 
     <p>
-    <?php if (! empty ($message)) {
-        echo esc_html($message); 
+    <?php if (! empty ($pk_message)) {
+        echo wp_kses_post($pk_message); 
     } else {
         echo esc_html ('Le client n\'a pas ajouté de message supplémentaire.');
     } 
