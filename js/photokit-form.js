@@ -5,8 +5,11 @@
             
         const reservationEndDate = document.getElementById('pk_reservation_end_date');
 
-// regarde l'évènement changement sur le champ du formulaire
+
+if (reservationStartDate && reservationEndDate) {
+
         reservationStartDate.addEventListener('change', function() { 
+            
             // Récupération de la valeur de l'élèment HTML date de début (pk_start... etc)
 
                 const startDateString = reservationStartDate.value;
@@ -37,4 +40,5 @@
                 reservationEndDate.min = reservationEndString;
 
         });
-    });
+    }
+});
