@@ -1,6 +1,10 @@
-
-
 input {
+    padding:8px;
+    border-radius: 10px;
+}
+
+#pk_customer_message {
+    width:100%;
     padding:8px;
     border-radius: 10px;
 }
